@@ -1,0 +1,35 @@
+<?php
+
+/**
+ * Implements hook_form_system_theme_settings_alter().
+ */
+function lightning_form_system_theme_settings_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id = NULL) {
+  if (isset($form_id)) {
+    return;
+  }
+
+  $form['background_fieldset'] = [
+    '#type' => 'details',
+    '#title' => t('Page Color'),
+    '#open' => TRUE,
+  ];
+  $form['background_fieldset']['lightning_background'] = [
+    '#type' => 'color',
+    '#title' => t('Background Color'),
+    '#default_value' => theme_get_setting('lightning_background'),
+    '#description' => t('Only add a Hexadecimal color to background.'),
+  ];
+}
+
+/**
+ * Implements hook_page_attachments_alter().
+ */
+function lightning_page_attachments_alter(array &$attachments) {
+  $attachments['#attached']['html_head'][] = [
+    [
+      '#tag' => 'style',
+      '#value' => 'body { background-color: ' . theme_get_setting('lightning_background') . '; }',
+    ],
+    'lightning_background'
+  ];
+}
